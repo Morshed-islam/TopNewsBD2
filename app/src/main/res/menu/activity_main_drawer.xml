@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/top_news"
+            android:title="টপ নিউজ" />
+
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/prothom_alo"
+            android:title="প্রথম আলো" />
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/kaler_kantho"
+            android:title="কালের কন্ঠ" />
+    </group>
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/bdnews"
+            android:title="বিডি নিউজ"
+            />
+    </group>
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/juganntor"
+            android:title="যুগান্তর" />
+    </group>
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/bd24live"
+            android:title="বিডি-২৪-লাইভ" />
+    </group>
+    <!--<group android:checkableBehavior="single">-->
+
+        <!--<item-->
+            <!--android:id="@+id/bangla_news"-->
+            <!--android:title="বাংলা নিউজ" />-->
+    <!--</group>-->
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/bbc_bangla"
+            android:title="বিবিসি বাংলা" />
+    </group>
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/samakal"
+            android:title="সমকাল" />
+    </group>
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/bangladesh_protidin"
+            android:title="বাংলাদেশ প্রতিদিন" />
+    </group>
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/ntv_news"
+            android:title="এনটিভি নিউজ" />
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item android:title="Others">
+        <menu>
+        <item
+            android:id="@+id/theme"
+            android:title="Custom Theme" />
+        <item
+            android:id="@+id/nav_share"
+            android:title="Share" />
+        </menu>
+        </item>
+    </group>
+
+       <!--<item android:title="Communicate">-->
+           <!--<menu>-->
+               <!--<item-->
+                   <!--android:id="@+id/theme"-->
+                   <!--android:title="Custom Theme" />-->
+               <!--<item-->
+                   <!--android:id="@+id/nav_share"-->
+                   <!--android:icon="@drawable/ic_menu_share"-->
+                   <!--android:title="Share" />-->
+           <!--</menu>-->
+       <!--</item>-->
+
+</menu>

@@ -1,0 +1,54 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.devbd.topnewsbd.fragment.fragment_top_news.LatestNewsTop">
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      >
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:text="latest news" />
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:text="latest news" />
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:text="latest news" />
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:text="latest news" />
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:text="latest news" />
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:text="latest news" />
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:text="latest news" />
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:text="latest news" />
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:text="latest news" />
+
+
+  </LinearLayout>
+
+</FrameLayout>

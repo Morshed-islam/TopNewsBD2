@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#c40418</color>
+    <color name="colorPrimaryDark">#6b0207</color>
+    <color name="tabsScrollColor">#910205</color>
+
+    <!--<color name="colorPrimary">#322a58</color>-->
+    <!--<color name="colorPrimaryDark">#4d4670</color>-->
+    <!--<color name="tabsScrollColor">#322a58</color>-->
+    <color name="colorAccent">#FFF</color>
+    <color name="colorFloating">#FF4081</color>
+
+    <color name="newColor">#322a58</color>
+    <color name="newColor1">#33a8fc</color>
+
+    <color name="colorShop">#9a1e1b</color>
+    <color name="colorShop2">#071f53</color>
+    <color name="colorNavText">#ffffff</color>
+    <color name="colorSettings">#40000000</color>
+    <color name="colorClick">#abcdef</color>
+
+    <!--<color name="colorPrimary">#00897B</color>-->
+    <!--<color name="colorPrimaryDark">#00695C</color>-->
+    <!--<color name="tabsScrollColor">#004D40</color>-->
+    <!--<color name="colorAccent">#FF4081</color>-->
+</resources>
