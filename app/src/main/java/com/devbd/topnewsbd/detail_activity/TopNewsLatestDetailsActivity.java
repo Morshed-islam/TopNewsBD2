@@ -17,6 +17,10 @@ import com.devbd.topnewsbd.R;
 import com.devbd.topnewsbd.constant.Constant;
 import com.devbd.topnewsbd.helper.HelperMethod;
 import com.devbd.topnewsbd.webView_activity.AllNewsDetailsWebActivity;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.vstechlab.easyfonts.EasyFonts;
 
 import org.jsoup.Jsoup;
@@ -37,6 +41,8 @@ public class TopNewsLatestDetailsActivity extends AppCompatActivity {
     private int color = R.color.white;
     private Button mDetails;
     private String title ="টপ নিউজ";
+    InterstitialAd interstitialAd;
+    AdView mAdView;
 
 
     @Override
@@ -51,12 +57,16 @@ public class TopNewsLatestDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mAdView= (AdView) findViewById(R.id.adView);
         tvTitle = (TextView) findViewById(R.id.tv_title);
         tvNewsPaperName = (TextView) findViewById(R.id.tv_NewsPaperName);
         tvDate = (TextView) findViewById(R.id.tv_date);
         tvDetails = (TextView) findViewById(R.id.tv_details);
         imgUrl = (ImageView) findViewById(R.id.imgView);
         mDetails = (Button) findViewById(R.id.details);
+
+
+        admob_integrate();
 
 
         tvTitle.setTypeface(EasyFonts.robotoBold(this));
@@ -189,5 +199,58 @@ public class TopNewsLatestDetailsActivity extends AppCompatActivity {
             context = TopNewsLatestDetailsActivity.this;
 
         return context;
+    }
+
+
+
+    //  Insterstitial mAdView
+    public void displayInterstitialAd(){
+        if(interstitialAd.isLoaded()){
+            interstitialAd.show();
+        }
+    }
+
+    //for admob integrated
+    public void admob_integrate(){
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        //prepare interstitial ad
+
+        interstitialAd = new InterstitialAd(this);
+        //insert ad unit
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        interstitialAd.loadAd(adRequest);
+
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                displayInterstitialAd();
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 }

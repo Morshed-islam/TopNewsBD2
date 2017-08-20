@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.devbd.topnewsbd.about.AboutUS;
 import com.devbd.topnewsbd.adapter.TopNewsCustomFragmentPageAdapter;
 import com.devbd.topnewsbd.constant.Constant;
 import com.devbd.topnewsbd.fragment.fragment_bangladesh_protidin.BangladeshProtidin;
@@ -39,6 +40,9 @@ import com.devbd.topnewsbd.fragment.fragment_prothom_alo.ProthomAloFragment;
 import com.devbd.topnewsbd.fragment.fragment_samakal.Samakal;
 import com.devbd.topnewsbd.fragment.fragment_top_news.TopNews;
 import com.devbd.topnewsbd.UI.SettingsActivity;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -53,6 +57,8 @@ public class MainActivity extends AppCompatActivity
     int appTheme;
     int themeColor;
     int appColor;
+
+    InterstitialAd interstitialAd;
 
 
     @Override
@@ -82,6 +88,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbar.setTitle("Top News BD");
         setSupportActionBar(toolbar);
+
+        admob_integrate();
 
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -159,6 +167,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(getApplicationContext(),AboutUS.class));
             return true;
         }
 
@@ -273,6 +282,54 @@ public class MainActivity extends AppCompatActivity
             return false;
         }
         return true;
+    }
+
+
+    //Admod Integrated here
+
+    //  Insterstitial mAdView
+    public void displayInterstitialAd(){
+        if(interstitialAd.isLoaded()){
+            interstitialAd.show();
+        }
+    }
+
+    //for admob integrated
+    public void admob_integrate(){
+        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
+
+        //prepare interstitial ad
+
+        interstitialAd = new InterstitialAd(this);
+        //insert ad unit
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        interstitialAd.loadAd(adRequest);
+
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                displayInterstitialAd();
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
     }
 
 

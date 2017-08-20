@@ -21,6 +21,10 @@ import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
 import com.devbd.topnewsbd.constant.Constant;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.util.concurrent.ExecutionException;
 
@@ -29,6 +33,8 @@ public class AllNewsDetailsWebActivity extends AppCompatActivity {
     String url;
     String mProthomALo, mBdNews, mKalerKantho,ntvNews;
     WebView webView;
+    AdView mAdView;
+    InterstitialAd interstitialAd;
 
     private String[] titles = {"ProthomAlo","BDNews"};
 
@@ -67,6 +73,10 @@ public class AllNewsDetailsWebActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+        mAdView = (AdView) findViewById(R.id.adView);
+
+        admob_integrate();
 //
 //        Intent title = getIntent();
 //        mProthomALo = title.getStringExtra(Constant.PROTHOM_ALO_TITLE);
@@ -249,6 +259,61 @@ public class AllNewsDetailsWebActivity extends AppCompatActivity {
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+
+
+    //Admod Integrated here
+
+    //  Insterstitial mAdView
+    public void displayInterstitialAd(){
+        if(interstitialAd.isLoaded()){
+            interstitialAd.show();
+        }
+    }
+
+    //for admob integrated
+    public void admob_integrate(){
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        //prepare interstitial ad
+
+        interstitialAd = new InterstitialAd(this);
+        //insert ad unit
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        interstitialAd.loadAd(adRequest);
+
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                displayInterstitialAd();
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 
 }
