@@ -3,8 +3,10 @@ package com.devbd.topnewsbd.fragment.fragment_samakal;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +17,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.SamakalTopDetailsActivity;
 import com.devbd.topnewsbd.helper.HelperMethod;
-import com.devbd.topnewsbd.model.samakal_model.SamakalLatestModel;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.samakal_model.SamakalTopViewModel;
-import com.devbd.topnewsbd.recycler_adapter.SamakalLatestRCVAdapter;
 import com.devbd.topnewsbd.recycler_adapter.SamakalTopViewsRCVAdapter;
 
 import org.jsoup.Jsoup;
@@ -53,6 +56,22 @@ public class TopViewNewsSamakal extends Fragment {
         View view = inflater.inflate(R.layout.fragment_top_view_news_samakal, container, false);
         arrayList = new ArrayList<>();
 
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (NetCheckDialogHelper.isOnline(getContext()) == true){
+                    new SamakalTopJSOUP().execute();
+
+                }else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+            }
+        });
+
         linearLayoutManager = new LinearLayoutManager(view.getContext());
         new SamakalTopJSOUP().execute();
 
@@ -86,6 +105,10 @@ public class TopViewNewsSamakal extends Fragment {
 
                 Elements latestHeading = simplifiedData.select("a > font");
 
+                Elements mLink = simplifiedData.select("ul > li > a");
+                Log.i("morshed",mLink.attr("href"));
+
+
 
                 try {
 
@@ -94,10 +117,12 @@ public class TopViewNewsSamakal extends Fragment {
                         Element imgElement = simplifiedData.select("img").get(i);
                         String imgUrl = imgElement.absUrl("src");
 
+                        String link = mLink.get(i).attr("href");
+                        Log.i("morshed",link);
 
-                        SamakalTopViewModel model = new SamakalTopViewModel(title,imgUrl);
+                        SamakalTopViewModel model = new SamakalTopViewModel(title,imgUrl,link);
                         arrayList.add(model);
-                        Log.i("morshed",title+"\n"+imgUrl+"\n");
+//                        Log.i("morshed",title+"\n"+imgUrl);
 
                     }
 
@@ -142,10 +167,10 @@ public class TopViewNewsSamakal extends Fragment {
         adapter.SetOnItemClickListener(new SamakalTopViewsRCVAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position){
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
-                Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), SamakalTopDetailsActivity.class);
+                intent.putExtra(Constant.SAMAKAL_TOP_DETAIL_INFO, arrayList.get(position).getLink());
+                startActivity(intent);
+//                Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
             }
         });
     }

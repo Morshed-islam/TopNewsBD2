@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.devbd.topnewsbd.R;
 import com.devbd.topnewsbd.model.jugantor_model.JugantorTopViewModel;
 import com.squareup.picasso.Picasso;
+import com.vstechlab.easyfonts.EasyFonts;
 
 import java.util.ArrayList;
 
@@ -23,6 +24,7 @@ public class JugantorTopViewsRCVAdapter extends RecyclerView.Adapter<JugantorTop
     private Context context;
     private JugantorTopViewsRCVAdapter.OnItemClickListener onItemClickListener;
     private String str ="";
+    private int customImage = R.drawable.jugantor;
 
 
     public JugantorTopViewsRCVAdapter(ArrayList<JugantorTopViewModel> latestNews, Context context) {
@@ -40,7 +42,9 @@ public class JugantorTopViewsRCVAdapter extends RecyclerView.Adapter<JugantorTop
     public void onBindViewHolder(JugantorTopViewsVWHolder holder, int position) {
         holder.newsTitle.setText(latestNews.get(position).getNewsHeading());
         holder.mDate.setText(latestNews.get(position).getDate());
-        Picasso.with(context).load(latestNews.get(position).getImageLink()).into(holder.news_img);
+
+        holder.news_img.setImageResource(customImage);
+        //Picasso.with(context).load(latestNews.get(position).getImageLink()).into(holder.news_img);
 
     }
 
@@ -62,6 +66,8 @@ public class JugantorTopViewsRCVAdapter extends RecyclerView.Adapter<JugantorTop
             newsTitle = (TextView) itemView.findViewById(R.id.news_heading);
             mDate = (TextView) itemView.findViewById(R.id.date);
             news_img = (ImageView) itemView.findViewById(R.id.news_imgage);
+            newsTitle.setTypeface(EasyFonts.robotoMedium(context));
+            newsTitle.setTypeface(EasyFonts.robotoMedium(context));
             itemView.setOnClickListener(this);
 
         }

@@ -3,10 +3,11 @@ package com.devbd.topnewsbd.fragment.fragment_bbc_bangla;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,14 +17,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
-import com.devbd.topnewsbd.fragment.fragment_kalerkantho.LatestNewsKalerkantho;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.BBCBanglaLatestDetailsActivity;
 import com.devbd.topnewsbd.helper.HelperMethod;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.bbcbangla_model.BBCBanglaLatestModel;
-import com.devbd.topnewsbd.model.bdnews_model.BdNewsLatestModel;
-import com.devbd.topnewsbd.model.kalerkantho_model.KalerKanthoLatestModel;
 import com.devbd.topnewsbd.recycler_adapter.BBCBanglaLatestRCVAdapter;
-import com.devbd.topnewsbd.recycler_adapter.BdNewsLatestRCVAdapter;
-import com.devbd.topnewsbd.recycler_adapter.KalerkanthoLatestRCVAdapter;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -59,9 +58,33 @@ public class LatestNewsBBCBangla extends Fragment {
         View view= inflater.inflate(R.layout.fragment_latest_news_bbcbangla, container, false);
 
         arrayList = new ArrayList<>();
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //this is for checking internet connectiom
+                if (NetCheckDialogHelper.isOnline(getContext()) == true){
+                    new BBCBanglaLatestJSOUP().execute();
+
+                }else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+            }
+        });
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());
-        new BBCBanglaLatestJSOUP().execute();
+        //this is for checking internet connectiom
+        if (NetCheckDialogHelper.isOnline(getContext()) == true){
+            new BBCBanglaLatestJSOUP().execute();
+
+        }else {
+
+            NetCheckDialogHelper.dialogNotConnected(getContext());
+
+        }
 
         rView = (RecyclerView) view.findViewById(R.id.recycler_view);
         rView.setHasFixedSize(true);
@@ -93,6 +116,7 @@ public class LatestNewsBBCBangla extends Fragment {
 
                 Elements latestHeading = simplifiedData.select("h3 > span");
                 Elements mDate = simplifiedData.select("ul > li");
+                Elements mLink = simplifiedData.select("a.title-link");
 
                 for(int i = 0; i<latestHeading.size(); i++){
 
@@ -106,8 +130,12 @@ public class LatestNewsBBCBangla extends Fragment {
                     //this is for getting news date and time
                     String date = mDate.get(i).text();
 
+                    //this is for getting news Link
+                    String link = mLink.get(i).attr("href");
+                    String finalLink = "http://www.bbc.com"+link;
 
-                    BBCBanglaLatestModel model = new BBCBanglaLatestModel(title,imgUrl,date);
+
+                    BBCBanglaLatestModel model = new BBCBanglaLatestModel(title,imgUrl,date,finalLink);
                     arrayList.add(model);
 
                     Log.i("morshed",title+"\n"+imgUrl+"\n"+date);
@@ -151,10 +179,10 @@ public class LatestNewsBBCBangla extends Fragment {
             adapter.SetOnItemClickListener(new BBCBanglaLatestRCVAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position){
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
-                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), BBCBanglaLatestDetailsActivity.class);
+                intent.putExtra(Constant.BBCBANGLA_LATEST_DETAIL_INFO, arrayList.get(position).getLink());
+                startActivity(intent);
+//                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                 }
             });
         }

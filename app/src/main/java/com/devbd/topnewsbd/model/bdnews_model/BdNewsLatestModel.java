@@ -8,13 +8,12 @@ public class BdNewsLatestModel {
     private String newsHeading;
     private String newsDescription;
     private String imageLink;
-    private String moreLink;
+    private String link;
 
-    public BdNewsLatestModel(String newsHeading, String newsDescription, String imageLink, String moreLink) {
+
+    public BdNewsLatestModel(String newsHeading, String link) {
         this.newsHeading = newsHeading;
-        this.newsDescription = newsDescription;
-        this.imageLink = imageLink;
-        this.moreLink = moreLink;
+        this.link = link;
     }
 
     public BdNewsLatestModel(String newsHeading) {
@@ -25,9 +24,12 @@ public class BdNewsLatestModel {
         return newsHeading;
     }
 
-    public BdNewsLatestModel(String newsHeading, String imageLink) {
-        this.newsHeading = newsHeading;
-        this.imageLink = imageLink;
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public void setNewsHeading(String newsHeading) {
@@ -50,11 +52,4 @@ public class BdNewsLatestModel {
         this.imageLink = imageLink;
     }
 
-    public String getMoreLink() {
-        return moreLink;
-    }
-
-    public void setMoreLink(String moreLink) {
-        this.moreLink = moreLink;
-    }
 }

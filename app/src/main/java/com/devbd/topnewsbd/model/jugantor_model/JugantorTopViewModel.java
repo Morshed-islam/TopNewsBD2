@@ -9,7 +9,12 @@ public class JugantorTopViewModel {
     private String newsDescription;
     private String imageLink;
     private String date;
+    private String link;
 
+    public JugantorTopViewModel(String newsHeading, String link) {
+        this.newsHeading = newsHeading;
+        this.link = link;
+    }
 
     public JugantorTopViewModel(String newsHeading) {
         this.newsHeading = newsHeading;
@@ -19,6 +24,15 @@ public class JugantorTopViewModel {
         this.newsHeading = newsHeading;
         this.imageLink = imageLink;
         this.date = date;
+    }
+
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getDate() {

@@ -33,6 +33,8 @@ public class BangladeshProtidin extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_bangladesh_protidin, container, false);
+
+        getActivity().setTitle("বাংলাদেশ প্রতিদিন");
         tabLayout = (TabLayout)view.findViewById(R.id.tabs);
         viewPager = (ViewPager)view.findViewById(R.id.view_pager);
 

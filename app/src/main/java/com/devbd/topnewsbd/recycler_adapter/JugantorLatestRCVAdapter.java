@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.devbd.topnewsbd.R;
 import com.devbd.topnewsbd.model.jugantor_model.JugantorLatestModel;
 import com.squareup.picasso.Picasso;
+import com.vstechlab.easyfonts.EasyFonts;
 
 import java.util.ArrayList;
 
@@ -62,6 +63,7 @@ public class JugantorLatestRCVAdapter extends RecyclerView.Adapter<JugantorLates
             newsTitle = (TextView) itemView.findViewById(R.id.news_heading);
             mDate = (TextView) itemView.findViewById(R.id.date);
             news_img = (ImageView) itemView.findViewById(R.id.news_imgage);
+            newsTitle.setTypeface(EasyFonts.robotoMedium(context));
             itemView.setOnClickListener(this);
 
         }

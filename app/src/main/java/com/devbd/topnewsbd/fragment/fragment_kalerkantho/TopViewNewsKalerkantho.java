@@ -4,8 +4,10 @@ package com.devbd.topnewsbd.fragment.fragment_kalerkantho;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,11 +18,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
-import com.devbd.topnewsbd.fragment.fragment_bdnews.TopViewNewsBDNews;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.KalerkanthoTopDeatilsActivity;
 import com.devbd.topnewsbd.helper.HelperMethod;
-import com.devbd.topnewsbd.model.kalerkantho_model.KalerKanthoLatestModel;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.kalerkantho_model.KalerKanthoTopViewModel;
-import com.devbd.topnewsbd.recycler_adapter.KalerkanthoLatestRCVAdapter;
 import com.devbd.topnewsbd.recycler_adapter.KalerkanthoTopViewsRCVAdapter;
 
 import org.jsoup.Jsoup;
@@ -58,6 +60,23 @@ public class TopViewNewsKalerkantho extends Fragment {
         View view= inflater.inflate(R.layout.fragment_top_view_news_kalerkantho, container, false);
 
         arrayList = new ArrayList<>();
+
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //this is for checking internet connectiom
+                if (NetCheckDialogHelper.isOnline(getContext()) == true){
+                    new KalerkanthoTopJSOUP().execute();
+
+                }else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+            }
+        });
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());
         new KalerkanthoTopJSOUP().execute();
@@ -133,6 +152,7 @@ public class TopViewNewsKalerkantho extends Fragment {
 
                 Elements latestHeading = simplifiedData.select("li > a");
                 Elements mDate = simplifiedData.select("li > small");
+                Elements mLink = simplifiedData.select("li > a");
 
                 int size = latestHeading.size();
 
@@ -147,9 +167,11 @@ public class TopViewNewsKalerkantho extends Fragment {
                     //this is for getting news date and time
                     String date = mDate.get(i).text();
 
+                    //getiing link
+                    String link = mLink.get(i).absUrl("href");
 
 
-                    KalerKanthoTopViewModel model = new KalerKanthoTopViewModel(title,imgUrl,date);
+                    KalerKanthoTopViewModel model = new KalerKanthoTopViewModel(title,imgUrl,date,link);
                     arrayList.add(model);
 
                     Log.i("morshed",title+"\n"+imgUrl+"\n"+date);
@@ -192,11 +214,11 @@ public class TopViewNewsKalerkantho extends Fragment {
             adapter.SetOnItemClickListener(new KalerkanthoTopViewsRCVAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
+                Intent intent = new Intent(getContext(), KalerkanthoTopDeatilsActivity.class);
+                intent.putExtra(Constant.KALER_KANTHO_TOP_DETAIL_INFO, arrayList.get(position).getLink());
+                startActivity(intent);
 
-                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                 }
             });
         }

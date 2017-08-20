@@ -3,8 +3,10 @@ package com.devbd.topnewsbd.fragment.fragment_ntv_news;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,12 +17,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
-import com.devbd.topnewsbd.fragment.fragment_samakal.LatestNewsSamakal;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.NtvNewsLatestDetailsActivity;
 import com.devbd.topnewsbd.helper.HelperMethod;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.dmpnews_model.NtvNewsLatestModel;
-import com.devbd.topnewsbd.model.samakal_model.SamakalLatestModel;
 import com.devbd.topnewsbd.recycler_adapter.NtvNewsLatestRCVAdapter;
-import com.devbd.topnewsbd.recycler_adapter.SamakalLatestRCVAdapter;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -57,8 +59,34 @@ public class LatestNewsNtvNews extends Fragment {
 
         arrayList = new ArrayList<>();
 
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (NetCheckDialogHelper.isOnline(getContext()) == true){
+
+                    new NtvLatestJSOUP().execute();
+                }else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+            }
+        });
+
         linearLayoutManager = new LinearLayoutManager(view.getContext());
-        new NtvLatestJSOUP().execute();
+
+        //this is for checking internet connectiom
+        if (NetCheckDialogHelper.isOnline(getContext()) == true){
+                new NtvLatestJSOUP().execute();
+        }else {
+
+            NetCheckDialogHelper.dialogNotConnected(getContext());
+
+        }
+
+
 
         rView = (RecyclerView) view.findViewById(R.id.recycler_view);
         rView.setHasFixedSize(true);
@@ -92,6 +120,8 @@ public class LatestNewsNtvNews extends Fragment {
                 Elements latestHeading = simplifiedData.select("div.hl > h4");
                 Elements mTime = simplifiedData.select("div.post_date > p");
 
+                Elements mlink = simplifiedData.select("div.all_news_content_block > a");
+
 
                 try {
 
@@ -103,10 +133,13 @@ public class LatestNewsNtvNews extends Fragment {
 
                         String time = mTime.get(i).text();
 
+                        String link= mlink.get(i).attr("href");
+                        Log.i("morshed",link);
 
-                        NtvNewsLatestModel model = new NtvNewsLatestModel(title,imgUrl,time);
+
+                        NtvNewsLatestModel model = new NtvNewsLatestModel(title,imgUrl,time,link);
                         arrayList.add(model);
-                        Log.i("morshed",title+"\n"+imgUrl+"\n");
+//                        Log.i("morshed",title+"\n"+imgUrl+"\n");
 
                     }
 
@@ -149,10 +182,10 @@ public class LatestNewsNtvNews extends Fragment {
         adapter.SetOnItemClickListener(new NtvNewsLatestRCVAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position){
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
-                Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), NtvNewsLatestDetailsActivity.class);
+                intent.putExtra(Constant.NTVNEWS_LATEST_DETAIL_INFO, arrayList.get(position).getLink());
+                startActivity(intent);
+//                Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
             }
         });
     }

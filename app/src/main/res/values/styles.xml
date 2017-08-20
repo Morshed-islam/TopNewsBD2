@@ -10,6 +10,8 @@
         <!--<item name="android:navigationBarColor" tools:targetApi="lollipop">@color/colorPrimary</item>-->
     </style>
 
+
+
     <style name="NavigationViewStyle">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>

@@ -4,9 +4,11 @@ package com.devbd.topnewsbd.fragment.fragment_bdnews;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +19,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.BdNewsTopDetailsActivity;
 import com.devbd.topnewsbd.helper.HelperMethod;
-import com.devbd.topnewsbd.model.bdnews_model.BdNewsLatestModel;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.bdnews_model.BdNewsTopViewModel;
-import com.devbd.topnewsbd.recycler_adapter.BdNewsLatestRCVAdapter;
 import com.devbd.topnewsbd.recycler_adapter.BdNewsTopViewsRCVAdapter;
 
 import org.jsoup.Jsoup;
@@ -64,6 +67,24 @@ public class TopViewNewsBDNews extends Fragment {
 //            }
 //        });
 
+        new BdNewsTopJsoup().execute();
+
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //this is for checking internet connectiom
+                if (NetCheckDialogHelper.isOnline(getContext()) == true){
+                    new BdNewsTopJsoup().execute();
+
+                }else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+
+            }
+        });
 
 
 
@@ -102,7 +123,7 @@ public class TopViewNewsBDNews extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        new BdNewsTopJsoup().execute();
+
         Log.i(TAG,"On Attached Top");
 
     }
@@ -156,16 +177,20 @@ public class TopViewNewsBDNews extends Fragment {
                 Elements topHeading = elements.select("ul > li > a");
                // Elements topHeading = elements.select("h6 > a");
 
+                //getting link
+                Elements mLink = elements.select("ul > li > a");
 
-                for (int i = 0; i < topHeading.size(); i++) {
+
+                for (int i = 0; i < 10; i++) {
 
                     String title = topHeading.get(i).text();
                     //System.out.println(el.text());
                     //System.out.println(el.attr("href"));
 
-//                    BdNewsTopViewModel bdNewsTopViewModel = new BdNewsTopViewModel(title);
-//                    arrayList.add(bdNewsTopViewModel);
-                    BdNewsTopViewModel model = new BdNewsTopViewModel(title);
+                    String link = mLink.get(i).absUrl("href");
+
+
+                    BdNewsTopViewModel model = new BdNewsTopViewModel(title,link);
                     arrayList.add(model);
 
                     Log.i(TAG+"Top Data is here: --",title);
@@ -201,11 +226,11 @@ public class TopViewNewsBDNews extends Fragment {
         adapter.SetOnItemClickListener(new BdNewsTopViewsRCVAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
+                Intent intent = new Intent(getContext(), BdNewsTopDetailsActivity.class);
+                intent.putExtra(Constant.BDNEWS_TOP_DETAIL_INFO, arrayList.get(position).getLink());
+                startActivity(intent);
 
-                Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
             }
         });
     }

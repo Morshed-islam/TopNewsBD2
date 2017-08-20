@@ -32,6 +32,7 @@ public class Bd24LiveNews extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_bd24live, container, false);
 
+        getActivity().setTitle("বিডি ২৪ লাইভ");
         tabLayout = (TabLayout)view.findViewById(R.id.tabs);
         viewPager = (ViewPager)view.findViewById(R.id.view_pager);
 

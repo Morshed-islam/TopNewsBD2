@@ -1,30 +1,33 @@
 package com.devbd.topnewsbd;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.adapter.TopNewsCustomFragmentPageAdapter;
 import com.devbd.topnewsbd.constant.Constant;
-import com.devbd.topnewsbd.fragment.fragment_bangla_news.BanglaNews;
 import com.devbd.topnewsbd.fragment.fragment_bangladesh_protidin.BangladeshProtidin;
 import com.devbd.topnewsbd.fragment.fragment_bbc_bangla.BBCBangla;
 import com.devbd.topnewsbd.fragment.fragment_bdnews.BDNews;
@@ -35,7 +38,7 @@ import com.devbd.topnewsbd.fragment.fragment_kalerkantho.Kalerkantho;
 import com.devbd.topnewsbd.fragment.fragment_prothom_alo.ProthomAloFragment;
 import com.devbd.topnewsbd.fragment.fragment_samakal.Samakal;
 import com.devbd.topnewsbd.fragment.fragment_top_news.TopNews;
-import com.devbd.topnewsbd.theme_manager.SettingsActivity;
+import com.devbd.topnewsbd.UI.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -63,11 +66,11 @@ public class MainActivity extends AppCompatActivity
         themeColor = appColor;
         constant.color = appColor;
 
-        if (themeColor == 0){
+        if (themeColor == 0) {
             setTheme(Constant.theme);
-        }else if (appTheme == 0){
+        } else if (appTheme == 0) {
             setTheme(Constant.theme);
-        }else{
+        } else {
             setTheme(appTheme);
         }
 
@@ -77,16 +80,18 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //toolbar.setTitle("Top News BD");
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         customFragmentPageAdapter = new TopNewsCustomFragmentPageAdapter(getSupportFragmentManager());
    /*     mViewPager = (ViewPager) findViewById(R.id.container);
@@ -169,19 +174,30 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.top_news) {
             // Handle the camera action
             fragment = new TopNews();
+
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
         } else if (id == R.id.prothom_alo) {
             fragment = new ProthomAloFragment();
+            Intent intent = new Intent();
+            intent.putExtra(Constant.PROTHOM_ALO_TITLE,"0");
+
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
 
+        }else if (id == R.id.ntv_news) {
+            fragment = new NtvNews();
+            Intent intent = new Intent();
+            intent.putExtra(Constant.NTV_NEWS_TITILE,"1");
+
+
+            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
         } else if (id == R.id.kaler_kantho) {
             fragment = new Kalerkantho();
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
-        } else if (id == R.id.bdnews) {
-            fragment = new BDNews();
+        }  else if (id == R.id.bbc_bangla) {
+            fragment = new BBCBangla();
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
         } else if (id == R.id.juganntor) {
@@ -198,8 +214,9 @@ public class MainActivity extends AppCompatActivity
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
         }*/
-        else if (id == R.id.bbc_bangla) {
-            fragment = new BBCBangla();
+
+        else if (id == R.id.bdnews) {
+            fragment = new BDNews();
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
         } else if (id == R.id.samakal) {
@@ -211,19 +228,29 @@ public class MainActivity extends AppCompatActivity
             fragment = new BangladeshProtidin();
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
-        } else if (id == R.id.ntv_news) {
+        }  else if (id == R.id.theme) {
 
-            fragment = new NtvNews();
-            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-       }
-        else if (id == R.id.theme){
+            //startActivity(new Intent(MainActivity.this, SettingsActivity.class));
 
-            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-
-           // overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-
-        }else if (id == R.id.nav_share){
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
+
+            // overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+
+        } else if (id == R.id.java_programming) {
+
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.eu_devbd.javaprogramming")));
+
+        } else if (id == R.id.cgpa) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.devbd.eu.sgpacalculator&hl=en")));
+
+        } else if (id == R.id.nav_share) {
+
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey check out my app at: https://play.google.com/store/apps/developer?id=Eu%20Dev&hl=en");
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
+
         }
 
 
@@ -233,6 +260,18 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         assert drawer != null;
         drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+
+    public boolean isOnline() {
+        ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+
+        if (netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()) {
+            Toast.makeText(getApplicationContext(), "No Internet connection!", Toast.LENGTH_LONG).show();
+            return false;
+        }
         return true;
     }
 

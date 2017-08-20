@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:padding="6dp"
-            app:tabTextColor="#fff"
+            app:tabTextColor="#a6a8ab"
             app:tabSelectedTextColor="#fff"
             />
 

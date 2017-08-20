@@ -10,12 +10,27 @@ public class Bd24LiveTopViewModel {
     private String newsDescription;
     private String imageLink;
     private String date;
+    private String link;
 
+    public Bd24LiveTopViewModel(String newsHeading, String imageLink, String date, String link) {
+        this.newsHeading = newsHeading;
+        this.imageLink = imageLink;
+        this.date = date;
+        this.link = link;
+    }
 
     public Bd24LiveTopViewModel(String newsHeading, String imageLink, String date) {
         this.newsHeading = newsHeading;
         this.imageLink = imageLink;
         this.date = date;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getDate() {

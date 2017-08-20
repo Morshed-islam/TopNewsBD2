@@ -32,6 +32,7 @@ public class Jugantor extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_jugantor, container, false);
+        getActivity().setTitle("যুগান্তর");
         tabLayout = (TabLayout)view.findViewById(R.id.tabs);
         viewPager = (ViewPager)view.findViewById(R.id.view_pager);
 

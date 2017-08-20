@@ -4,9 +4,11 @@ package com.devbd.topnewsbd.fragment.fragment_kalerkantho;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,15 +16,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.KalerkanthoLatestDeatilsActivity;
 import com.devbd.topnewsbd.helper.HelperMethod;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.kalerkantho_model.KalerKanthoLatestModel;
-import com.devbd.topnewsbd.model.kalerkantho_model.KalerKanthoTopViewModel;
-import com.devbd.topnewsbd.recycler_adapter.BdNewsLatestRCVAdapter;
 import com.devbd.topnewsbd.recycler_adapter.KalerkanthoLatestRCVAdapter;
-import com.devbd.topnewsbd.recycler_adapter.KalerkanthoTopViewsRCVAdapter;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -37,7 +38,7 @@ import java.util.ArrayList;
  */
 public class LatestNewsKalerkantho extends Fragment {
 
-    private String TAG ="morshed";
+    private String TAG = "morshed";
     private RecyclerView rView;
     private ArrayList<KalerKanthoLatestModel> arrayList;
     private LinearLayoutManager linearLayoutManager;
@@ -53,20 +54,45 @@ public class LatestNewsKalerkantho extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_latest_news_kalerkantho, container, false);
+        View view = inflater.inflate(R.layout.fragment_latest_news_kalerkantho, container, false);
 
 
         arrayList = new ArrayList<>();
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //this is for checking internet connectiom
+                if (NetCheckDialogHelper.isOnline(getContext()) == true) {
+                    new KalerkanthoLatestJSOUP().execute();
+
+                } else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+            }
+        });
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());
-        new KalerkanthoLatestJSOUP().execute();
+
+//this is for checking internet connectiom
+        if (NetCheckDialogHelper.isOnline(getContext()) == true){
+            new KalerkanthoLatestJSOUP().execute();
+
+        }else {
+
+            NetCheckDialogHelper.dialogNotConnected(getContext());
+
+        }
 
         rView = (RecyclerView) view.findViewById(R.id.recycler_view);
         rView.setHasFixedSize(true);
         rView.setLayoutManager(linearLayoutManager);
 
-//        adapter =new KalerkanthoLatestRCVAdapter(view.getContext(),arrayList);
-//        rView.setAdapter(adapter);
+        adapter = new KalerkanthoLatestRCVAdapter(view.getContext(), arrayList);
+        rView.setAdapter(adapter);
 
 
         return view;
@@ -90,32 +116,30 @@ public class LatestNewsKalerkantho extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        Log.i(TAG,"On Attached Latest");
+        Log.i(TAG, "On Attached Latest");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(TAG,"On Resume Latest");
-        rView.setAdapter(new KalerkanthoLatestRCVAdapter(getContext(),arrayList));
+        Log.i(TAG, "On Resume Latest");
 
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.i(TAG,"On Pause Latest");
+        Log.i(TAG, "On Pause Latest");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.i(TAG,"On DeAttached Latest");
+        Log.i(TAG, "On DeAttached Latest");
     }
 
 
-
-    public class KalerkanthoLatestJSOUP extends AsyncTask<Void,Void,Boolean>{
+    public class KalerkanthoLatestJSOUP extends AsyncTask<Void, Void, Boolean> {
         ProgressDialog progressDialog = HelperMethod.getProgressBar(getDialogContext());
 
 
@@ -134,9 +158,10 @@ public class LatestNewsKalerkantho extends Fragment {
 
                 Elements latestHeading = simplifiedData.select("li > a");
                 Elements mDate = simplifiedData.select("li > small");
+                Elements mLink = simplifiedData.select("li > a");
 
 
-                for(int i = 0; i<10; i++){
+                for (int i = 0; i < 10; i++) {
 
                     //this is for getting news title
                     String title = latestHeading.get(i).text();
@@ -147,21 +172,24 @@ public class LatestNewsKalerkantho extends Fragment {
                     //this is for getting news date and time
                     String date = mDate.get(i).text();
 
+                    //for getting link
+                    String link = mLink.get(i).absUrl("href");
+                    Log.i("morshed" + "Link is here", link);
 
-                    KalerKanthoLatestModel model = new KalerKanthoLatestModel(title,imgUrl,date);
+//                    String finalLink = "http://www.kalerkantho.com/"+link;
+//                    Log.i("morshed"+"final Link is here",finalLink);
+
+                    KalerKanthoLatestModel model = new KalerKanthoLatestModel(title, imgUrl, date, link);
                     arrayList.add(model);
 
-                    Log.i("morshed",title+"\n"+imgUrl+"\n"+date);
+                    Log.i("morshed", title + "\n" + imgUrl + "\n" + date);
 
                 }
-
-
 
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
 
 
             return null;
@@ -171,7 +199,7 @@ public class LatestNewsKalerkantho extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            HelperMethod.startProgressBar(progressDialog,"Loading..");
+            HelperMethod.startProgressBar(progressDialog, "Loading..");
         }
 
         @Override
@@ -182,31 +210,30 @@ public class LatestNewsKalerkantho extends Fragment {
         }
 
 
-
         private void setUpAdapter() {
-            adapter = new KalerkanthoLatestRCVAdapter(getContext(),arrayList);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, false);
+            adapter = new KalerkanthoLatestRCVAdapter(getContext(), arrayList);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
             linearLayoutManager.setAutoMeasureEnabled(true);
             rView.setLayoutManager(linearLayoutManager);
             rView.setAdapter(adapter);
             adapter.SetOnItemClickListener(new KalerkanthoLatestRCVAdapter.OnItemClickListener() {
                 @Override
-                public void onItemClick(View view, int position){
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
-                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                public void onItemClick(View view, int position) {
+                    Intent intent = new Intent(getContext(), KalerkanthoLatestDeatilsActivity.class);
+                    intent.putExtra(Constant.KALER_KANTHO_LATEST_DETAIL_INFO, arrayList.get(position).getLink());
+                    startActivity(intent);
+//               Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                 }
             });
         }
 
 
-        private Context getDialogContext(){
+        private Context getDialogContext() {
             Context context;
-            if(getActivity() != null)
+            if (getActivity() != null)
                 context = getActivity();
             else
-                context = getContext();
+                context = this.getDialogContext();
 
             return context;
         }

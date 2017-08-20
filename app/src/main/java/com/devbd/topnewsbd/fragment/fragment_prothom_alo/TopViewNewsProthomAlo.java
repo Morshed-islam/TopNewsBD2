@@ -3,8 +3,10 @@ package com.devbd.topnewsbd.fragment.fragment_prothom_alo;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,13 +14,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.ProthomAloTopDetailsActivity;
 import com.devbd.topnewsbd.helper.HelperMethod;
-import com.devbd.topnewsbd.model.prothomalo_model.ProthomAloLatestModel;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.prothomalo_model.ProthomAloTopViewModel;
-import com.devbd.topnewsbd.recycler_adapter.ProthomAloLatestRCVAdapter;
 import com.devbd.topnewsbd.recycler_adapter.ProthomAloTopViewsRCVAdapter;
 
 import org.jsoup.Jsoup;
@@ -53,8 +55,25 @@ public class TopViewNewsProthomAlo extends Fragment {
         View view = inflater.inflate(R.layout.fragment_top_news_views_prothom_alo, container, false);
 
         arrayList = new ArrayList<>();
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                if (NetCheckDialogHelper.isOnline(getContext()) == true){
+                    new ProthomALoTopJSOUP().execute();
+                }else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+            }
+        });
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());
+
+
         new ProthomALoTopJSOUP().execute();
 
         rView = (RecyclerView) view.findViewById(R.id.recycler_view);
@@ -88,7 +107,7 @@ public class TopViewNewsProthomAlo extends Fragment {
 
                 Elements latestHeading = simplifiedData.select("div.info > h2.title_holder > span.title");
                 Elements mTime = simplifiedData.select("div.info > div.additional > span.time");
-
+                Elements mLink = simplifiedData.select("div.each > a");
 
                 for(int i=0; i<10; i++){
                     String title = latestHeading.get(i).text();
@@ -96,9 +115,10 @@ public class TopViewNewsProthomAlo extends Fragment {
                     String imgUrl = imgElement.absUrl("src");
 
                     String time = mTime.get(i).text();
+                    String url = mLink.get(i).attr("href");
+                    String urlFinal = "http://www.prothom-alo.com/"+url;
 
-
-                    ProthomAloTopViewModel model = new ProthomAloTopViewModel(title,imgUrl,time);
+                    ProthomAloTopViewModel model = new ProthomAloTopViewModel(title,imgUrl,time,urlFinal);
                     arrayList.add(model);
                     Log.i("morshed",title+"\n"+imgUrl+"\n");
 
@@ -128,6 +148,8 @@ public class TopViewNewsProthomAlo extends Fragment {
             HelperMethod.stopProgressBar(progressDialog);
             setUpAdapter();
         }
+
+
     }
 
     private void setUpAdapter() {
@@ -139,10 +161,10 @@ public class TopViewNewsProthomAlo extends Fragment {
         adapter.SetOnItemClickListener(new ProthomAloTopViewsRCVAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position){
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
-                Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), ProthomAloTopDetailsActivity.class);
+                intent.putExtra(Constant.PROTHOM_ALO_TOP_DETAIL_INFO, arrayList.get(position).getLink());
+                startActivity(intent);
+
             }
         });
     }

@@ -10,16 +10,21 @@ public class SamakalTopViewModel {
     private String newsDescription;
     private String imageLink;
     private String date;
+    private String link;
 
-    public SamakalTopViewModel(String newsHeading, String imageLink, String date) {
+
+    public SamakalTopViewModel(String newsHeading, String imageLink, String link) {
         this.newsHeading = newsHeading;
         this.imageLink = imageLink;
-        this.date = date;
+        this.link = link;
     }
 
-    public SamakalTopViewModel(String newsHeading, String imageLink) {
-        this.newsHeading = newsHeading;
-        this.imageLink = imageLink;
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getDate() {

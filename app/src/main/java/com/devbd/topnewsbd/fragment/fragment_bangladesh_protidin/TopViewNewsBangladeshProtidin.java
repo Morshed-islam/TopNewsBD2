@@ -3,8 +3,10 @@ package com.devbd.topnewsbd.fragment.fragment_bangladesh_protidin;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,15 +16,16 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.BDProtidinTopDetailsActivity;
+import com.devbd.topnewsbd.fragment.fragment_bdnews.LatestNewsBDNews;
 import com.devbd.topnewsbd.helper.HelperMethod;
-import com.devbd.topnewsbd.model.bangladeshprotidin_model.BangladeshProtidinLatestModel;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.bangladeshprotidin_model.BangladeshProtidinTopViewModel;
-import com.devbd.topnewsbd.recycler_adapter.BangladeshProtidinLatestRCVAdapter;
 import com.devbd.topnewsbd.recycler_adapter.BangladeshProtidinTopViewsRCVAdapter;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -53,6 +56,22 @@ public class TopViewNewsBangladeshProtidin extends Fragment {
         View view = inflater.inflate(R.layout.fragment_top_view_news_bangladesh_protidin, container, false);
 
         arrayList = new ArrayList<>();
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //this is for checking internet connectiom
+                if (NetCheckDialogHelper.isOnline(getContext()) == true){
+                    new BangladeshProtidinTopViewsJSOUP().execute();
+
+                }else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+            }
+        });
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());
         new BangladeshProtidinTopViewsJSOUP().execute();
@@ -104,9 +123,11 @@ public class TopViewNewsBangladeshProtidin extends Fragment {
 
                         //this is for getting news date and time
 //                        String date = mDate.get(i).text();
+                        String link = latestHeading.get(i).attr("href");
+                        String finalLink = "http://www.bd-pratidin.com/"+link;
 
 
-                        BangladeshProtidinTopViewModel model = new BangladeshProtidinTopViewModel(title);
+                        BangladeshProtidinTopViewModel model = new BangladeshProtidinTopViewModel(title,finalLink);
                         arrayList.add(model);
 
                         // Log.i("morshed",title+"\n"+imgUrl+"\n"+date);
@@ -151,10 +172,10 @@ public class TopViewNewsBangladeshProtidin extends Fragment {
             adapter.SetOnItemClickListener(new BangladeshProtidinTopViewsRCVAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position){
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
-                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), BDProtidinTopDetailsActivity.class);
+                intent.putExtra(Constant.BDPROTIDIN_TOP_DETAIL_INFO, arrayList.get(position).getLink());
+                startActivity(intent);
+//                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                 }
             });
         }

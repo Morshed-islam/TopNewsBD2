@@ -8,12 +8,25 @@ public class BangladeshProtidinLatestModel {
     private String newsHeading;
     private String newsDescription;
     private String imageLink;
-    private String moreLink;
+    private String link;
 
+    public BangladeshProtidinLatestModel(String newsHeading, String imageLink, String link) {
+        this.newsHeading = newsHeading;
+        this.imageLink = imageLink;
+        this.link = link;
+    }
 
     public BangladeshProtidinLatestModel(String newsHeading, String imageLink) {
         this.newsHeading = newsHeading;
         this.imageLink = imageLink;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getNewsHeading() {
@@ -40,11 +53,5 @@ public class BangladeshProtidinLatestModel {
         this.imageLink = imageLink;
     }
 
-    public String getMoreLink() {
-        return moreLink;
-    }
 
-    public void setMoreLink(String moreLink) {
-        this.moreLink = moreLink;
-    }
 }

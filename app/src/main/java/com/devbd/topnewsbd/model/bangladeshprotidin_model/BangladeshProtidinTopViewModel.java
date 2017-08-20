@@ -9,10 +9,23 @@ public class BangladeshProtidinTopViewModel {
     private String newsHeading;
     private String newsDescription;
     private String imageLink;
-    private String moreLink;
+    private String link;
 
     public BangladeshProtidinTopViewModel(String newsHeading) {
         this.newsHeading = newsHeading;
+    }
+
+    public BangladeshProtidinTopViewModel(String newsHeading, String link) {
+        this.newsHeading = newsHeading;
+        this.link = link;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getNewsHeading() {
@@ -39,11 +52,4 @@ public class BangladeshProtidinTopViewModel {
         this.imageLink = imageLink;
     }
 
-    public String getMoreLink() {
-        return moreLink;
-    }
-
-    public void setMoreLink(String moreLink) {
-        this.moreLink = moreLink;
-    }
 }

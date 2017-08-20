@@ -8,15 +8,49 @@ public class TopNewsLatestModel {
     private String newsHeading;
     private String newsDescription;
     private String imageLink;
-    private String moreLink;
+    private String link;
+    private String date;
+    private String newsPaperName;
 
-    public TopNewsLatestModel(String newsHeading, String newsDescription, String imageLink, String moreLink) {
+
+    public TopNewsLatestModel(String newsHeading, String imageLink, String link, String date, String newsPaperName) {
         this.newsHeading = newsHeading;
-        this.newsDescription = newsDescription;
         this.imageLink = imageLink;
-        this.moreLink = moreLink;
+        this.link = link;
+        this.date = date;
+        this.newsPaperName = newsPaperName;
     }
 
+    public TopNewsLatestModel(String newsHeading, String imageLink, String date, String newsPaperName) {
+        this.newsHeading = newsHeading;
+        this.imageLink = imageLink;
+        this.date = date;
+        this.newsPaperName = newsPaperName;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getNewsPaperName() {
+        return newsPaperName;
+    }
+
+    public void setNewsPaperName(String newsPaperName) {
+        this.newsPaperName = newsPaperName;
+    }
 
     public String getNewsHeading() {
         return newsHeading;
@@ -42,11 +76,4 @@ public class TopNewsLatestModel {
         this.imageLink = imageLink;
     }
 
-    public String getMoreLink() {
-        return moreLink;
-    }
-
-    public void setMoreLink(String moreLink) {
-        this.moreLink = moreLink;
-    }
-}
+  }

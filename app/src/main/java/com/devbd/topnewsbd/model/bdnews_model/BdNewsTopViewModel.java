@@ -8,13 +8,20 @@ public class BdNewsTopViewModel {
     private String newsHeading;
     private String newsDescription;
     private String imageLink;
-    private String moreLink;
+    private String link;
 
-    public BdNewsTopViewModel(String newsHeading, String newsDescription, String imageLink, String moreLink) {
+
+    public BdNewsTopViewModel(String newsHeading, String link) {
         this.newsHeading = newsHeading;
-        this.newsDescription = newsDescription;
-        this.imageLink = imageLink;
-        this.moreLink = moreLink;
+        this.link = link;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public BdNewsTopViewModel(String newsHeading) {
@@ -45,11 +52,5 @@ public class BdNewsTopViewModel {
         this.imageLink = imageLink;
     }
 
-    public String getMoreLink() {
-        return moreLink;
-    }
 
-    public void setMoreLink(String moreLink) {
-        this.moreLink = moreLink;
-    }
 }

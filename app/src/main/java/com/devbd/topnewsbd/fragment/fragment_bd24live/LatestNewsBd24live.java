@@ -3,8 +3,10 @@ package com.devbd.topnewsbd.fragment.fragment_bd24live;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,12 +16,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
-import com.devbd.topnewsbd.fragment.fragment_jugantor.LatestNewsJugantor;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.Bd24LiveLatestDetailsActivity;
 import com.devbd.topnewsbd.helper.HelperMethod;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.bd24live_model.Bd24LiveLatestModel;
-import com.devbd.topnewsbd.model.jugantor_model.JugantorLatestModel;
 import com.devbd.topnewsbd.recycler_adapter.Bd24LatestRCVAdapter;
-import com.devbd.topnewsbd.recycler_adapter.JugantorLatestRCVAdapter;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -53,9 +55,34 @@ public class LatestNewsBd24live extends Fragment {
         View view= inflater.inflate(R.layout.fragment_latest_news_ittefaq, container, false);
 
         arrayList = new ArrayList<>();
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //this is for checking internet connectiom
+                if (NetCheckDialogHelper.isOnline(getContext()) == true){
+                    new Bd24LiveLatestJSOUP().execute();
+
+                }else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+            }
+        });
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());
-        new Bd24LiveLatestJSOUP().execute();
+        //this is for checking internet connectiom
+        if (NetCheckDialogHelper.isOnline(getContext()) == true){
+            new Bd24LiveLatestJSOUP().execute();
+
+        }else {
+
+            NetCheckDialogHelper.dialogNotConnected(getContext());
+
+        }
+
 
         rView = (RecyclerView) view.findViewById(R.id.recycler_view);
         rView.setHasFixedSize(true);
@@ -91,6 +118,7 @@ public class LatestNewsBd24live extends Fragment {
                 Elements latestHeading = simplifiedData.select("div.right > h3");
                 Elements mDate = simplifiedData.select("div.right > p");
                 //Elements ImgElement = simplifiedData.select("img");
+                Elements mLink = simplifiedData.select("a");
 
                 try {
                     for (int i = 0; i < latestHeading.size(); i++) {
@@ -107,7 +135,12 @@ public class LatestNewsBd24live extends Fragment {
                         String date = mDate.get(i).text();
 
 
-                        Bd24LiveLatestModel model = new Bd24LiveLatestModel(title, imgUrl, date);
+                        //link
+                        String link = mLink.get(i).attr("href");
+
+
+
+                        Bd24LiveLatestModel model = new Bd24LiveLatestModel(title, imgUrl, date,link);
                         arrayList.add(model);
 
                         // Log.i("morshed",title+"\n"+imgUrl+"\n"+date);
@@ -150,10 +183,10 @@ public class LatestNewsBd24live extends Fragment {
             adapter.SetOnItemClickListener(new Bd24LatestRCVAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position){
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
-                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), Bd24LiveLatestDetailsActivity.class);
+                intent.putExtra(Constant.BDNEWS_LATEST_DETAIL_INFO, arrayList.get(position).getLink());
+                startActivity(intent);
+//                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                 }
             });
         }

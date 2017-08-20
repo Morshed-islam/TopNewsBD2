@@ -37,6 +37,8 @@ public class Kalerkantho extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view= inflater.inflate(R.layout.fragment_kalerkantho, container, false);
+        getActivity().setTitle("কালের কন্ঠ");
+
         tabLayout = (TabLayout)view.findViewById(R.id.tabs);
         viewPager = (ViewPager)view.findViewById(R.id.view_pager);
 

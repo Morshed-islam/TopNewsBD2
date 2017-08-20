@@ -1,16 +1,10 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.devbd.topnewsbd.fragment.fragment_bdnews.TopViewNewsBDNews">
+    tools:context="com.devbd.topnewsbd.fragment.fragment_bdnews.LatestNewsBDNews">
 
-    <!--<Button-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/refresh"-->
-        <!--android:text="refresh"-->
-        <!--/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,5 +21,13 @@
 
     </LinearLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
 
-</LinearLayout>
+        app:srcCompat="@drawable/reloadicon" />
+
+</FrameLayout>

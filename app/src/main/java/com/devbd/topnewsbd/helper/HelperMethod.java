@@ -14,7 +14,6 @@ public class HelperMethod {
         return progressBar;
     }
     public static void startProgressBar(ProgressDialog progressBar, String message){
-
         progressBar.setCancelable(false);//you can cancel it by pressing back button
         progressBar.setMessage(message);
         progressBar.show();//displays the progress bar

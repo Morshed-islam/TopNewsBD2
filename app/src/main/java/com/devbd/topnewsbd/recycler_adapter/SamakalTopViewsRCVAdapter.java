@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.devbd.topnewsbd.R;
 import com.devbd.topnewsbd.model.samakal_model.SamakalTopViewModel;
 import com.squareup.picasso.Picasso;
+import com.vstechlab.easyfonts.EasyFonts;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,7 @@ public class SamakalTopViewsRCVAdapter extends RecyclerView.Adapter<SamakalTopVi
 
     @Override
     public SamakalTopViewsVWholder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_card_layout_with_all,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_card_layout_with_img_title,parent,false);
 
         return new SamakalTopViewsVWholder(view);
     }
@@ -40,7 +41,7 @@ public class SamakalTopViewsRCVAdapter extends RecyclerView.Adapter<SamakalTopVi
     @Override
     public void onBindViewHolder(SamakalTopViewsVWholder holder, int position) {
         holder.newsTitle.setText(latestNews.get(position).getNewsHeading());
-        holder.mDate.setText(latestNews.get(position).getDate());
+//        holder.mDate.setText(latestNews.get(position).getDate());
         Picasso.with(context).load(latestNews.get(position).getImageLink()).into(holder.news_img);
 
     }
@@ -53,14 +54,15 @@ public class SamakalTopViewsRCVAdapter extends RecyclerView.Adapter<SamakalTopVi
     public class SamakalTopViewsVWholder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView newsTitle;
-        private TextView mDate;
+//        private TextView mDate;
         private ImageView news_img;
 
         public SamakalTopViewsVWholder(View itemView) {
             super(itemView);
             newsTitle = (TextView) itemView.findViewById(R.id.news_heading);
-            mDate = (TextView) itemView.findViewById(R.id.date);
+//            mDate = (TextView) itemView.findViewById(R.id.date);
             news_img = (ImageView) itemView.findViewById(R.id.news_imgage);
+            newsTitle.setTypeface(EasyFonts.robotoMedium(context));
             itemView.setOnClickListener(this);
 
         }

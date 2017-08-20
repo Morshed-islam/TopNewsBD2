@@ -3,8 +3,10 @@ package com.devbd.topnewsbd.fragment.fragment_bbc_bangla;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +17,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.BBCBanglaTopDetailsActivity;
 import com.devbd.topnewsbd.helper.HelperMethod;
-import com.devbd.topnewsbd.model.bbcbangla_model.BBCBanglaLatestModel;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.bbcbangla_model.BBCBanglaTopViewModel;
-import com.devbd.topnewsbd.recycler_adapter.BBCBanglaLatestRCVAdapter;
 import com.devbd.topnewsbd.recycler_adapter.BBCBanglaTopViewsRCVAdapter;
 
 import org.jsoup.Jsoup;
@@ -54,6 +57,22 @@ public class TopViewNewsBBCBangla extends Fragment {
         View view= inflater.inflate(R.layout.fragment_top_view_news_bbcbangla, container, false);
 
         arrayList = new ArrayList<>();
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //this is for checking internet connectiom
+                if (NetCheckDialogHelper.isOnline(getContext()) == true){
+                    new BBCBanglaTopJSOUP().execute();
+
+                }else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+            }
+        });
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());
         new BBCBanglaTopJSOUP().execute();
@@ -89,6 +108,8 @@ public class TopViewNewsBBCBangla extends Fragment {
                 Elements latestHeading = simplifiedData.select("h3 > span");
                 Elements mDate = simplifiedData.select("ul > li");
 
+                Elements mLink = simplifiedData.select("a.title-link");
+
                 for(int i = 0; i<latestHeading.size(); i++){
 
                     //this is for getting news title
@@ -101,8 +122,12 @@ public class TopViewNewsBBCBangla extends Fragment {
                     //this is for getting news date and time
                     String date = mDate.get(i).text();
 
+                    //this is for getting news link
+                    String link = mLink.get(i).attr("href");
 
-                    BBCBanglaTopViewModel model = new BBCBanglaTopViewModel(title,imgUrl,date);
+                    String finalLink = "http://www.bbc.com"+link;
+
+                    BBCBanglaTopViewModel model = new BBCBanglaTopViewModel(title,imgUrl,date,finalLink);
                     arrayList.add(model);
 
                     Log.i("morshed",title+"\n"+imgUrl+"\n"+date);
@@ -144,10 +169,10 @@ public class TopViewNewsBBCBangla extends Fragment {
             adapter.SetOnItemClickListener(new BBCBanglaTopViewsRCVAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position){
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
-                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), BBCBanglaTopDetailsActivity.class);
+                intent.putExtra(Constant.BBCBANGLA_TOP_DETAIL_INFO, arrayList.get(position).getLink());
+                startActivity(intent);
+//                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                 }
             });
         }

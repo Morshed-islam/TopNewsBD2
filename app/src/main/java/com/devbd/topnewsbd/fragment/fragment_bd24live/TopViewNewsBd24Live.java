@@ -3,8 +3,10 @@ package com.devbd.topnewsbd.fragment.fragment_bd24live;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,10 +16,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.Bd24LiveTopDetailsActivity;
 import com.devbd.topnewsbd.helper.HelperMethod;
-import com.devbd.topnewsbd.model.bd24live_model.Bd24LiveLatestModel;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.bd24live_model.Bd24LiveTopViewModel;
-import com.devbd.topnewsbd.recycler_adapter.Bd24LatestRCVAdapter;
 import com.devbd.topnewsbd.recycler_adapter.Bd24TopViewsRCVAdapter;
 
 import org.jsoup.Jsoup;
@@ -53,6 +56,22 @@ public class TopViewNewsBd24Live extends Fragment {
 
 
         arrayList = new ArrayList<>();
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //this is for checking internet connectiom
+                if (NetCheckDialogHelper.isOnline(getContext()) == true){
+                    new Bd24LiveTopViewsJSOUP().execute();
+
+                }else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+            }
+        });
 
         linearLayoutManager = new LinearLayoutManager (view.getContext());
         new Bd24LiveTopViewsJSOUP().execute();
@@ -92,6 +111,8 @@ public class TopViewNewsBd24Live extends Fragment {
                 Elements mDate = simplifiedData.select("div.right > p");
                 //Elements ImgElement = simplifiedData.select("img");
 
+                Elements mLink = simplifiedData.select("a");
+
                 try {
                     for (int i = 0; i < latestHeading.size(); i++) {
 
@@ -106,8 +127,12 @@ public class TopViewNewsBd24Live extends Fragment {
                         //this is for getting news date and time
                         String date = mDate.get(i).text();
 
+                        //this is for getting link
+                        String link = mLink.get(i).attr("href");
 
-                        Bd24LiveTopViewModel model = new Bd24LiveTopViewModel(title, imgUrl, date);
+
+
+                        Bd24LiveTopViewModel model = new Bd24LiveTopViewModel(title, imgUrl, date,link);
                         arrayList.add(model);
 
                         // Log.i("morshed",title+"\n"+imgUrl+"\n"+date);
@@ -150,10 +175,10 @@ public class TopViewNewsBd24Live extends Fragment {
             adapter.SetOnItemClickListener(new Bd24TopViewsRCVAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position){
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
-                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), Bd24LiveTopDetailsActivity.class);
+                intent.putExtra(Constant.BD24LIVE_TOP_DETAIL_INFO, arrayList.get(position).getLink());
+                startActivity(intent);
+//                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                 }
             });
         }

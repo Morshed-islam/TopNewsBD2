@@ -3,9 +3,15 @@ package com.devbd.topnewsbd.fragment.fragment_prothom_alo;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,11 +21,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
-import com.devbd.topnewsbd.fragment.fragment_kalerkantho.LatestNewsKalerkantho;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.ProthomAloLatestDetailsActivity;
 import com.devbd.topnewsbd.helper.HelperMethod;
-import com.devbd.topnewsbd.model.kalerkantho_model.KalerKanthoLatestModel;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.prothomalo_model.ProthomAloLatestModel;
-import com.devbd.topnewsbd.recycler_adapter.KalerkanthoLatestRCVAdapter;
 import com.devbd.topnewsbd.recycler_adapter.ProthomAloLatestRCVAdapter;
 
 import org.jsoup.Jsoup;
@@ -28,6 +34,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 /**
@@ -55,9 +62,51 @@ public class LatestNewsProthomAlo extends Fragment {
 
 
         arrayList = new ArrayList<>();
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (NetCheckDialogHelper.isOnline(getContext()) == true){
+                    new ProthomALoLatestJSOUP().execute();
+                }else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+
+            }
+        });
+
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());
-        new ProthomALoLatestJSOUP().execute();
+
+
+
+        if (NetCheckDialogHelper.isOnline(getContext()) == true){
+            new ProthomALoLatestJSOUP().execute();
+        }else {
+
+            NetCheckDialogHelper.dialogNotConnected(getContext());
+
+        }
+
+
+//        if (isOnline() == true){
+//            new ProthomALoLatestJSOUP().execute();
+//            Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
+//        }else {
+//            Toast.makeText(getContext(), "Plz check your Connection!!", Toast.LENGTH_SHORT).show();
+//        }
+
+
+
+
+
+
+
+
+
 
         rView = (RecyclerView) view.findViewById(R.id.recycler_view);
         rView.setHasFixedSize(true);
@@ -88,7 +137,7 @@ public class LatestNewsProthomAlo extends Fragment {
 
                 Elements latestHeading = simplifiedData.select("div.info > h2.title_holder > span.title");
                 Elements mTime = simplifiedData.select("div.info > div.additional > span.time");
-
+                Elements mLink = simplifiedData.select("div.each > a");
 
                 for(int i=0; i<10; i++){
                     String title = latestHeading.get(i).text();
@@ -96,11 +145,15 @@ public class LatestNewsProthomAlo extends Fragment {
                     String imgUrl = imgElement.absUrl("src");
 
                     String time = mTime.get(i).text();
+                    String url = mLink.get(i).attr("href");
+                    String urlFinal = "http://www.prothom-alo.com/"+url;
 
 
-                    ProthomAloLatestModel model = new ProthomAloLatestModel(title,imgUrl,time);
+
+                    ProthomAloLatestModel model = new ProthomAloLatestModel(title,imgUrl,time,urlFinal);
                     arrayList.add(model);
                     Log.i("morshed",title+"\n"+imgUrl+"\n");
+                    Log.i("morshed"+"Url is here: ---",urlFinal);
 
                 }
 
@@ -125,9 +178,10 @@ public class LatestNewsProthomAlo extends Fragment {
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             HelperMethod.stopProgressBar(progressDialog);
+
             setUpAdapter();
         }
-    }
+
 
     private void setUpAdapter() {
         adapter = new ProthomAloLatestRCVAdapter(arrayList,getContext());
@@ -138,10 +192,10 @@ public class LatestNewsProthomAlo extends Fragment {
         adapter.SetOnItemClickListener(new ProthomAloLatestRCVAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position){
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
-                Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), ProthomAloLatestDetailsActivity.class);
+                intent.putExtra(Constant.PROTHOM_ALO_LATEST_DETAIL_INFO, arrayList.get(position).getLink());
+                startActivity(intent);
+//                Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -158,6 +212,55 @@ public class LatestNewsProthomAlo extends Fragment {
     }
 
 
+//    public boolean isOnline() {
+//        ConnectivityManager conMgr = (ConnectivityManager) getDialogContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+//
+//        if(netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()){
+//            Toast.makeText(getDialogContext(), "No Internet connection!", Toast.LENGTH_LONG).show();
+//            return false;
+//        }
+//        return true;
+//    }
+
+
+
+    }
+
+//    public boolean isOnline() {
+//        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+//        return netInfo != null && netInfo.isConnectedOrConnecting();
+//    }
+//
+//
+//    public void checkNet(){
+//
+//        if (isOnline() == true) {
+//            new ProthomALoLatestJSOUP().execute();
+//        }else {
+//            try {
+//                Toast.makeText(getContext(), "Check internet", Toast.LENGTH_SHORT).show();
+//                AlertDialog.Builder builder =new AlertDialog.Builder(getContext());
+//                builder.setTitle("No internet Connection");
+//                builder.setMessage("Please turn on internet connection to continue");
+//                builder.setNegativeButton("close", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//                AlertDialog alertDialog = builder.create();
+//                alertDialog.show();
+//            }
+//            catch(Exception e)
+//            {
+//                Log.d("morshed", "Show Dialog: "+e.getMessage());
+//            }
+//
+//
+//    }
+//}
 
 
 }

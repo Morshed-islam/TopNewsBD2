@@ -10,11 +10,20 @@ public class ProthomAloTopViewModel {
     private String newsDescription;
     private String imageLink;
     private String date;
+    private String link;
 
     public ProthomAloTopViewModel(String newsHeading, String imageLink, String date) {
         this.newsHeading = newsHeading;
         this.imageLink = imageLink;
         this.date = date;
+    }
+
+
+    public ProthomAloTopViewModel(String newsHeading, String imageLink, String date, String link) {
+        this.newsHeading = newsHeading;
+        this.imageLink = imageLink;
+        this.date = date;
+        this.link = link;
     }
 
     public ProthomAloTopViewModel(String newsHeading) {
@@ -27,6 +36,14 @@ public class ProthomAloTopViewModel {
     }
 
 
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
 
     public String getDate() {
         return date;

@@ -1,4 +1,4 @@
-package com.devbd.topnewsbd.theme_manager;
+package com.devbd.topnewsbd.UI;
 
 import com.devbd.topnewsbd.R;
 import com.devbd.topnewsbd.constant.Constant;

@@ -3,8 +3,10 @@ package com.devbd.topnewsbd.fragment.fragment_bangladesh_protidin;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,12 +16,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
-import com.devbd.topnewsbd.fragment.fragment_jugantor.LatestNewsJugantor;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.BDProtidinLatestDetailsActivity;
+import com.devbd.topnewsbd.fragment.fragment_bdnews.LatestNewsBDNews;
 import com.devbd.topnewsbd.helper.HelperMethod;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.bangladeshprotidin_model.BangladeshProtidinLatestModel;
-import com.devbd.topnewsbd.model.jugantor_model.JugantorLatestModel;
 import com.devbd.topnewsbd.recycler_adapter.BangladeshProtidinLatestRCVAdapter;
-import com.devbd.topnewsbd.recycler_adapter.JugantorLatestRCVAdapter;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -38,7 +41,7 @@ public class LatestNewsBangladeshProtidin extends Fragment {
     private ArrayList<BangladeshProtidinLatestModel> arrayList;
     private BangladeshProtidinLatestRCVAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
-    private String str ="";
+    private String str = "";
 
 
     public LatestNewsBangladeshProtidin() {
@@ -53,15 +56,39 @@ public class LatestNewsBangladeshProtidin extends Fragment {
         View view = inflater.inflate(R.layout.fragment_latest_news_bangladesh_protidin, container, false);
 
         arrayList = new ArrayList<>();
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //this is for checking internet connectiom
+                if (NetCheckDialogHelper.isOnline(getContext()) == true) {
+                    new BangladeshProtidinLatestJSOUP().execute();
+
+                } else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+            }
+        });
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());
-        new BangladeshProtidinLatestJSOUP().execute();
+//this is for checking internet connectiom
+        if (NetCheckDialogHelper.isOnline(getContext()) == true) {
+            new BangladeshProtidinLatestJSOUP().execute();
+
+        } else {
+
+            NetCheckDialogHelper.dialogNotConnected(getContext());
+
+        }
 
         rView = (RecyclerView) view.findViewById(R.id.recycler_view);
         rView.setHasFixedSize(true);
         rView.setLayoutManager(linearLayoutManager);
 
-        adapter =new BangladeshProtidinLatestRCVAdapter(arrayList,view.getContext());
+        adapter = new BangladeshProtidinLatestRCVAdapter(arrayList, view.getContext());
         rView.setAdapter(adapter);
 
 
@@ -69,7 +96,7 @@ public class LatestNewsBangladeshProtidin extends Fragment {
     }
 
 
-    private class BangladeshProtidinLatestJSOUP extends AsyncTask<Void,Void,Boolean>{
+    private class BangladeshProtidinLatestJSOUP extends AsyncTask<Void, Void, Boolean> {
         ProgressDialog progressDialog = HelperMethod.getProgressBar(getDialogContext());
 
 
@@ -90,6 +117,8 @@ public class LatestNewsBangladeshProtidin extends Fragment {
 
                 Elements latestHeading = simplifiedData.select("a > div > font");
 
+                Elements mLink = simplifiedData.select("a");
+
                 try {
                     for (int i = 0; i < latestHeading.size(); i++) {
 
@@ -101,18 +130,19 @@ public class LatestNewsBangladeshProtidin extends Fragment {
 
                         String imgUrl = imgElement.absUrl("src");
 
-                        //this is for getting news date and time
-//                        String date = mDate.get(i).text();
+                        //this is for getting news Link
+                        String link = mLink.get(i).attr("href");
+                        String finalLink = "http://www.bd-pratidin.com/" + link;
 
 
-                        BangladeshProtidinLatestModel model = new BangladeshProtidinLatestModel(title,imgUrl);
+                        BangladeshProtidinLatestModel model = new BangladeshProtidinLatestModel(title, imgUrl, finalLink);
                         arrayList.add(model);
 
                         // Log.i("morshed",title+"\n"+imgUrl+"\n"+date);
 
                     }
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -122,15 +152,13 @@ public class LatestNewsBangladeshProtidin extends Fragment {
             }
 
 
-
-
             return null;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            HelperMethod.startProgressBar(progressDialog,"Loading..");
+            HelperMethod.startProgressBar(progressDialog, "Loading..");
 
         }
 
@@ -142,26 +170,26 @@ public class LatestNewsBangladeshProtidin extends Fragment {
         }
 
         private void setUpAdapter() {
-            adapter = new BangladeshProtidinLatestRCVAdapter(arrayList,getContext());
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL, false);
+            adapter = new BangladeshProtidinLatestRCVAdapter(arrayList, getContext());
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
             linearLayoutManager.setAutoMeasureEnabled(true);
             rView.setLayoutManager(linearLayoutManager);
             rView.setAdapter(adapter);
             adapter.SetOnItemClickListener(new BangladeshProtidinLatestRCVAdapter.OnItemClickListener() {
                 @Override
-                public void onItemClick(View view, int position){
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
-                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                public void onItemClick(View view, int position) {
+                    Intent intent = new Intent(getContext(), BDProtidinLatestDetailsActivity.class);
+                    intent.putExtra(Constant.BDPROTIDIN_LATEST_DETAIL_INFO, arrayList.get(position).getLink());
+                    startActivity(intent);
+//                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                 }
             });
         }
 
 
-        private Context getDialogContext(){
+        private Context getDialogContext() {
             Context context;
-            if(getActivity() != null)
+            if (getActivity() != null)
                 context = getActivity();
             else
                 context = getContext();

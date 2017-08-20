@@ -1,7 +1,6 @@
 package com.devbd.topnewsbd.recycler_adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 import com.devbd.topnewsbd.R;
 import com.devbd.topnewsbd.model.bangladeshprotidin_model.BangladeshProtidinTopViewModel;
 import com.squareup.picasso.Picasso;
+import com.vstechlab.easyfonts.EasyFonts;
 
 import java.util.ArrayList;
 
@@ -25,6 +25,7 @@ public class BangladeshProtidinTopViewsRCVAdapter extends RecyclerView.Adapter<B
     private Context context;
     private BangladeshProtidinTopViewsRCVAdapter.OnItemClickListener onItemClickListener;
     private String str ="";
+    private int customImage = R.drawable.bdprotidin;
 
 
     public BangladeshProtidinTopViewsRCVAdapter(ArrayList<BangladeshProtidinTopViewModel> latestNews, Context context) {
@@ -43,8 +44,10 @@ public class BangladeshProtidinTopViewsRCVAdapter extends RecyclerView.Adapter<B
     public void onBindViewHolder(BangladeshProtidinTopViewsVWHolder holder, int position) {
         holder.newsTitle.setText(latestNews.get(position).getNewsHeading());
 //        holder.mDate.setText(latestNews.get(position).getDate());
-        Picasso.with(context).load(latestNews.get(position).getImageLink()).into(holder.news_img);
+       // Picasso.with(context).load(latestNews.get(position).getImageLink()).into(holder.news_img);
 //         holder.news_img.setImageDrawable(R.drawable.ic_menu_gallery);
+        holder.news_img.setImageResource(customImage);
+
     }
 
     @Override
@@ -64,6 +67,7 @@ public class BangladeshProtidinTopViewsRCVAdapter extends RecyclerView.Adapter<B
             newsTitle = (TextView) itemView.findViewById(R.id.news_heading);
             mDate = (TextView) itemView.findViewById(R.id.date);
             news_img = (ImageView) itemView.findViewById(R.id.news_imgage);
+            newsTitle.setTypeface(EasyFonts.robotoMedium(context));
             itemView.setOnClickListener(this);
 
         }

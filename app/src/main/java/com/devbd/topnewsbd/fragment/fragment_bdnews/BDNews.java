@@ -44,6 +44,8 @@ public class BDNews extends Fragment {
 
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_bdnews, container, false);
+        getActivity().setTitle("বিডি নিউজ");
+
         tabLayout = (TabLayout)view.findViewById(R.id.tabs);
 //        mFragments.add(new LatestNewsBDNews());
 //        mFragments.add(new TopViewNewsBDNews());

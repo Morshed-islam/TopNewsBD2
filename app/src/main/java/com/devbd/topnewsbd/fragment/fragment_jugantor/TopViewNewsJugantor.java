@@ -3,22 +3,23 @@ package com.devbd.topnewsbd.fragment.fragment_jugantor;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.JugantorTopDetailsActivity;
 import com.devbd.topnewsbd.helper.HelperMethod;
-import com.devbd.topnewsbd.model.jugantor_model.JugantorLatestModel;
 import com.devbd.topnewsbd.model.jugantor_model.JugantorTopViewModel;
-import com.devbd.topnewsbd.recycler_adapter.JugantorLatestRCVAdapter;
 import com.devbd.topnewsbd.recycler_adapter.JugantorTopViewsRCVAdapter;
 
 import org.jsoup.Jsoup;
@@ -54,6 +55,14 @@ public class TopViewNewsJugantor extends Fragment {
 
 
         arrayList = new ArrayList<>();
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new JugantorTopJSOUP().execute();
+            }
+        });
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());
         new JugantorTopJSOUP().execute();
@@ -106,8 +115,11 @@ public class TopViewNewsJugantor extends Fragment {
                     //this is for getting news date and time
                    // String date = mDate.get(i).text();
 
+                    //link
+                    String link = latestHeading.get(i).attr("href");
 
-                    JugantorTopViewModel model = new JugantorTopViewModel(title);
+
+                    JugantorTopViewModel model = new JugantorTopViewModel(title,link);
                     arrayList.add(model);
 
                    // Log.i("morshed",title+"\n"+imgUrl+"\n"+date);
@@ -146,10 +158,10 @@ public class TopViewNewsJugantor extends Fragment {
             adapter.SetOnItemClickListener(new JugantorTopViewsRCVAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position){
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
-                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), JugantorTopDetailsActivity.class);
+                intent.putExtra(Constant.JUGANTOR_TOP_DETAIL_INFO, arrayList.get(position).getLink());
+                startActivity(intent);
+//                    Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                 }
             });
         }

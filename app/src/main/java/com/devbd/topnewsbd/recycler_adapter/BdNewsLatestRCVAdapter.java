@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.devbd.topnewsbd.R;
 import com.devbd.topnewsbd.model.bdnews_model.BdNewsLatestModel;
+import com.vstechlab.easyfonts.EasyFonts;
 
 import java.util.ArrayList;
 
@@ -25,22 +26,18 @@ public class BdNewsLatestRCVAdapter extends RecyclerView.Adapter<BdNewsLatestRCV
     private BdNewsLatestRCVAdapter.OnItemClickListener onItemClickListener;
     private String str;
 
+    int getCategoryImage = R.drawable.bdnews;
 
-    public BdNewsLatestRCVAdapter(Context context, ArrayList<BdNewsLatestModel> latestNews, String str) {
+    public BdNewsLatestRCVAdapter(Context context, ArrayList<BdNewsLatestModel> latestNews) {
         this.latestNews = latestNews;
         this.context = context;
-        this.str = str;
+
     }
 
-//    public BdNewsLatestRCVAdapter(Context context, ArrayList<BdNewsTopViewModel> topNews) {
-//        this.topNews = topNews;
-//        this.context = context;
-//
-//    }
 
     @Override
     public BdNewsLatestVWHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_card_layout_with_all,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_card_layout_with_img_title,parent,false);
 
         return new BdNewsLatestVWHolder(view);
     }
@@ -49,7 +46,9 @@ public class BdNewsLatestRCVAdapter extends RecyclerView.Adapter<BdNewsLatestRCV
     public void onBindViewHolder(BdNewsLatestVWHolder holder, int position) {
         holder.newsTitle.setText(latestNews.get(position).getNewsHeading());
         //Picasso.with(context).load(latestNews.get(position).getImageLink()).into(holder.news_img);
-        holder.news_img.getDrawable();
+        holder.news_img.setImageResource(getCategoryImage);
+
+
 
     }
 
@@ -68,6 +67,9 @@ public class BdNewsLatestRCVAdapter extends RecyclerView.Adapter<BdNewsLatestRCV
             super(itemView);
             newsTitle = (TextView) itemView.findViewById(R.id.news_heading);
             news_img = (ImageView) itemView.findViewById(R.id.news_imgage);
+
+            newsTitle.setTypeface(EasyFonts.robotoMedium(context));
+
             itemView.setOnClickListener(this);
         }
 

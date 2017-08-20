@@ -1,4 +1,4 @@
-package com.devbd.topnewsbd.theme_manager;
+package com.devbd.topnewsbd.UI;
 
 import android.annotation.TargetApi;
 import android.content.Intent;

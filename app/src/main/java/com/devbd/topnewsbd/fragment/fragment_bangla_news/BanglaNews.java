@@ -31,6 +31,7 @@ public class BanglaNews extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_bangla_news, container, false);
 
+        getActivity().setTitle("বাংলা নিউজ");
         tabLayout = (TabLayout)view.findViewById(R.id.tabs);
         viewPager = (ViewPager)view.findViewById(R.id.view_pager);
 

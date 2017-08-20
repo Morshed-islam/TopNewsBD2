@@ -9,7 +9,14 @@ public class BBCBanglaLatestModel {
     private String newsDescription;
     private String imageLink;
     private String date;
+    private String link;
 
+    public BBCBanglaLatestModel(String newsHeading, String imageLink, String date, String link) {
+        this.newsHeading = newsHeading;
+        this.imageLink = imageLink;
+        this.date = date;
+        this.link = link;
+    }
 
     public BBCBanglaLatestModel(String newsHeading, String imageLink, String date) {
         this.newsHeading = newsHeading;
@@ -17,13 +24,13 @@ public class BBCBanglaLatestModel {
         this.date = date;
     }
 
-    public BBCBanglaLatestModel(String newsHeading, String date) {
-        this.newsHeading = newsHeading;
-        this.date = date;
+
+    public String getLink() {
+        return link;
     }
 
-    public BBCBanglaLatestModel(String newsHeading) {
-        this.newsHeading = newsHeading;
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getDate() {

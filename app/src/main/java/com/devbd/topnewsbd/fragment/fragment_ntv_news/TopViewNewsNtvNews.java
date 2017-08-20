@@ -3,8 +3,10 @@ package com.devbd.topnewsbd.fragment.fragment_ntv_news;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +17,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.NtvNewsTopDetailsActivity;
 import com.devbd.topnewsbd.helper.HelperMethod;
-import com.devbd.topnewsbd.model.dmpnews_model.NtvNewsLatestModel;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.dmpnews_model.NtvNewsTopViewModel;
-import com.devbd.topnewsbd.recycler_adapter.NtvNewsLatestRCVAdapter;
 import com.devbd.topnewsbd.recycler_adapter.NtvNewsTopViewsRCVAdapter;
 
 import org.jsoup.Jsoup;
@@ -56,6 +59,23 @@ public class TopViewNewsNtvNews extends Fragment {
 
         arrayList = new ArrayList<>();
 
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //this is for checking internet connectiom
+                if (NetCheckDialogHelper.isOnline(getContext()) == true){
+                    new NtvTopJSOUP().execute();
+
+                }else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+            }
+        });
+
         linearLayoutManager = new LinearLayoutManager(view.getContext());
         new NtvTopJSOUP().execute();
 
@@ -88,6 +108,10 @@ public class TopViewNewsNtvNews extends Fragment {
                 Elements latestHeading = simplifiedData.select("div.hl > h4");
                 Elements mTime = simplifiedData.select("div.post_date > p");
 
+                Elements mlink = simplifiedData.select("div.all_news_content_block > a");
+
+
+
 
                 try {
 
@@ -98,8 +122,11 @@ public class TopViewNewsNtvNews extends Fragment {
 
                         String time = mTime.get(i).text();
 
+                        String link= mlink.get(i).attr("href");
+                        Log.i("morshed",link);
 
-                        NtvNewsTopViewModel model = new NtvNewsTopViewModel(title,imgUrl,time);
+
+                        NtvNewsTopViewModel model = new NtvNewsTopViewModel(title,imgUrl,time,link);
                         arrayList.add(model);
                         Log.i("morshed",title+"\n"+imgUrl+"\n");
 
@@ -144,10 +171,10 @@ public class TopViewNewsNtvNews extends Fragment {
         adapter.SetOnItemClickListener(new NtvNewsTopViewsRCVAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position){
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
-                Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), NtvNewsTopDetailsActivity.class);
+                intent.putExtra(Constant.NTVNEWS_TOP_DETAIL_INFO, arrayList.get(position).getLink());
+                startActivity(intent);
+//                Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
             }
         });
     }

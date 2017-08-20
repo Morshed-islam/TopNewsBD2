@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 
 import com.devbd.topnewsbd.R;
 import com.devbd.topnewsbd.adapter.TopNewsCustomFragmentPageAdapter;
+import com.devbd.topnewsbd.fragment.fragment_samakal.LatestNewsSamakal;
+import com.devbd.topnewsbd.fragment.fragment_samakal.TopViewNewsSamakal;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,12 +32,62 @@ public class TopNews extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_top_news, container, false);
-
+        getActivity().setTitle("টপ নিউজ");
         tabLayout = (TabLayout)view.findViewById(R.id.tabs);
         viewPager = (ViewPager)view.findViewById(R.id.view_pager);
 
         viewPager.setAdapter(new TopNewsCustomFragmentPageAdapter(getChildFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
+
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position){
+
+                    case 0:
+                        new LatestNewsTop();
+                        //Toast.makeText(getContext(), "Tab 1 selected", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        new TopViewNewsTop();
+                        //Toast.makeText(getContext(), "Tab 2 selected", Toast.LENGTH_SHORT).show();
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
 
         return view;
     }

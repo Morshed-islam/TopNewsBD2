@@ -3,8 +3,10 @@ package com.devbd.topnewsbd.fragment.fragment_samakal;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +17,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devbd.topnewsbd.R;
+import com.devbd.topnewsbd.constant.Constant;
+import com.devbd.topnewsbd.detail_activity.SamakalLatestDetailsActivity;
 import com.devbd.topnewsbd.helper.HelperMethod;
-import com.devbd.topnewsbd.model.prothomalo_model.ProthomAloLatestModel;
+import com.devbd.topnewsbd.helper.NetCheckDialogHelper;
 import com.devbd.topnewsbd.model.samakal_model.SamakalLatestModel;
-import com.devbd.topnewsbd.recycler_adapter.ProthomAloLatestRCVAdapter;
 import com.devbd.topnewsbd.recycler_adapter.SamakalLatestRCVAdapter;
 
 import org.jsoup.Jsoup;
@@ -52,9 +55,32 @@ public class LatestNewsSamakal extends Fragment {
         View view = inflater.inflate(R.layout.fragment_latest_news_samakal, container, false);
 
         arrayList = new ArrayList<>();
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (NetCheckDialogHelper.isOnline(getContext()) == true){
+                        new SamakalLatestJSOUP().execute();
+                }else {
+
+                    NetCheckDialogHelper.dialogNotConnected(getContext());
+
+                }
+            }
+        });
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());
-        new SamakalLatestJSOUP().execute();
+
+        if (NetCheckDialogHelper.isOnline(getContext()) == true){
+            new SamakalLatestJSOUP().execute();
+
+        }else {
+
+            NetCheckDialogHelper.dialogNotConnected(getContext());
+
+        }
+
 
         rView = (RecyclerView) view.findViewById(R.id.recycler_view);
         rView.setHasFixedSize(true);
@@ -86,6 +112,8 @@ public class LatestNewsSamakal extends Fragment {
                 Elements latestHeading = simplifiedData.select("div#hl2 > font");
                 Elements mTime = simplifiedData.select("tr > td > span");
 
+                Elements mLink = simplifiedData.select("a");
+
 
                 try {
 
@@ -95,10 +123,14 @@ public class LatestNewsSamakal extends Fragment {
                         Element imgElement = simplifiedData.select("img").get(i);
                         String imgUrl = imgElement.absUrl("src");
 
+                        //get time
                         String time = mTime.get(i).text();
 
+                        //get link
+                        String link = mLink.get(i).attr("href");
 
-                        SamakalLatestModel model = new SamakalLatestModel(title,imgUrl,time);
+
+                        SamakalLatestModel model = new SamakalLatestModel(title,imgUrl,time,link);
                         arrayList.add(model);
                         Log.i("morshed",title+"\n"+imgUrl+"\n");
 
@@ -143,10 +175,10 @@ public class LatestNewsSamakal extends Fragment {
         adapter.SetOnItemClickListener(new SamakalLatestRCVAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position){
-//                Intent intent = new Intent(getContext(), BlogWebDetails.class);
-//                intent.putExtra(SyncStateContract.Constants.BLOG_DETAIL_INFO, arrayList.get(position).getLink());
-//                startActivity(intent);
-                Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), SamakalLatestDetailsActivity.class);
+                intent.putExtra(Constant.SAMAKAL_LATEST_DETAIL_INFO, arrayList.get(position).getLink());
+                startActivity(intent);
+//                Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
             }
         });
     }

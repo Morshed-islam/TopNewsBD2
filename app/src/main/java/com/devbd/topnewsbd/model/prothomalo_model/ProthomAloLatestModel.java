@@ -10,6 +10,14 @@ public class ProthomAloLatestModel {
     private String newsDescription;
     private String imageLink;
     private String date;
+    private String link;
+
+    public ProthomAloLatestModel(String newsHeading, String imageLink, String date, String link) {
+        this.newsHeading = newsHeading;
+        this.imageLink = imageLink;
+        this.date = date;
+        this.link = link;
+    }
 
     public ProthomAloLatestModel(String newsHeading, String imageLink, String date) {
         this.newsHeading = newsHeading;
@@ -20,6 +28,14 @@ public class ProthomAloLatestModel {
     public ProthomAloLatestModel(String newsHeading, String imageLink) {
         this.newsHeading = newsHeading;
         this.imageLink = imageLink;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getDate() {
