@@ -217,17 +217,19 @@ public class TopNewsLatestDetailsActivity extends AppCompatActivity {
 
         //prepare interstitial ad
 
-        interstitialAd = new InterstitialAd(this);
-        //insert ad unit
-        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
-        interstitialAd.loadAd(adRequest);
+//        interstitialAd = new InterstitialAd(this);
+//        //insert ad unit
+//        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+//        interstitialAd.loadAd(adRequest);
+//
+//        interstitialAd.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdLoaded() {
+//                displayInterstitialAd();
+//            }
+//        });
+//
 
-        interstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                displayInterstitialAd();
-            }
-        });
     }
 
     @Override

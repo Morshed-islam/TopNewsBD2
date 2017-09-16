@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             Fragment fragment = null;
             Class fragmentClass = null;
-            fragmentClass = TopNews.class;
+            fragmentClass = ProthomAloFragment.class;
             try {
                 fragment = (Fragment) fragmentClass.newInstance();
             } catch (Exception e) {
@@ -180,13 +180,15 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.top_news) {
-            // Handle the camera action
-            fragment = new TopNews();
+//        if (id == R.id.top_news) {
+//            // Handle the camera action
+//            fragment = new TopNews();
+//
+//            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+//
+//        } else
 
-            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-
-        } else if (id == R.id.prothom_alo) {
+            if (id == R.id.prothom_alo) {
             fragment = new ProthomAloFragment();
             Intent intent = new Intent();
             intent.putExtra(Constant.PROTHOM_ALO_TITLE,"0");
