@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.devbd.topnewsbd">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -8,133 +9,94 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/topnewss_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/topnewss_launcher"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme.NoActionBar"
+        >
+
         <activity
             android:name=".splash.SplashActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity android:name=".MainActivity">
-            <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.DEFAULT" />
         </activity>
         <activity android:name=".UI.SettingsActivity" />
         <activity android:name=".detail_activity.ProthomAloLatestDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.ProthomAloLatestDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.ProthomAloTopDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.ProthomAloTopDetailsActivity" />
+
         </activity>
         <activity android:name=".webView_activity.AllNewsDetailsWebActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".webView_activity.AllNewsDetailsWebActivity" />
+
         </activity>
         <activity android:name=".detail_activity.KalerkanthoLatestDeatilsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.KalerkanthoLatestDeatilsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.KalerkanthoTopDeatilsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.KalerkanthoTopDeatilsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.BdNewsLatestDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.BdNewsLatestDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.BdNewsTopDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.BdNewsTopDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.JugantorLatestDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.JugantorLatestDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.JugantorTopDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.JugantorTopDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.Bd24LiveLatestDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.Bd24LiveLatestDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.Bd24LiveTopDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.Bd24LiveTopDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.BBCBanglaLatestDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.BBCBanglaLatestDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.BBCBanglaTopDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.BBCBanglaTopDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.SamakalLatestDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.SamakalLatestDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.SamakalTopDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.SamakalTopDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.BDProtidinLatestDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.BDProtidinLatestDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.BDProtidinTopDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.BDProtidinTopDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.NtvNewsLatestDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.NtvNewsLatestDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.NtvNewsTopDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.NtvNewsTopDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.TopNewsLatestDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.TopNewsLatestDetailsActivity" />
+
         </activity>
         <activity android:name=".detail_activity.TopNewsTopDetailsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".detail_activity.TopNewsTopDetailsActivity" />
+
         </activity>
-        <activity android:name=".about.AboutUS"></activity>
+        <activity android:name=".about.AboutUS">
+
+        </activity>
+
     </application>
 
 </manifest>

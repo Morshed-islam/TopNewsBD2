@@ -13,6 +13,7 @@ public class HelperMethod {
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         return progressBar;
     }
+
     public static void startProgressBar(ProgressDialog progressBar, String message){
         progressBar.setCancelable(false);//you can cancel it by pressing back button
         progressBar.setMessage(message);
